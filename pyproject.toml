@@ -3,4 +3,4 @@ name = "gui-dictionary"
 version = "0.1.0"
 description = "Dictionary App"
 requires-python = ">=3.13"
-dependencies = []
+dependencies = ["requests"]
