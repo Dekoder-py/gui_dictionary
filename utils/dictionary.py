@@ -3,15 +3,51 @@ import requests
 URL = "https://api.dictionaryapi.dev/api/v2/entries/en/"
 
 
-def get_definition(word):
-    if word:
+def make_request(label, word):
+    if word.strip():
         url = URL + word
         response = requests.get(url)
 
         if response.status_code == 200:
-            response_content = response.json()[0]
-            print(
-                response_content["meanings"][0]["definitions"][0]["definition"]
-            )  # TODO: Show on gui
+            return response.json()[0]
+        elif response.status_code == 404:
+            label.config(text="Word not found.")
+            return None
         else:
-            print(f"Error: {response.status_code}")  # TODO: Show on gui
+            label.config(text=f"Error {response.status_code}")
+            return None
+    return None
+
+
+def get_definition(label, word):
+    request = make_request(label, word)
+    if request:
+        label.config(
+            text=f"{word}, {request["meanings"][0]["partOfSpeech"]}: {request["meanings"][0]["definitions"][0]["definition"]}"
+        )
+    label.grid(row=1, column=0, padx=10, pady=5)
+
+
+def get_synonyms(label, word):
+    request = make_request(label, word)
+    if request:
+        all_synonyms = []  # store the synonyms here because the API is weird :(
+
+        for meaning in request["meanings"]:
+            all_synonyms.extend(meaning.get("synonyms", []))
+
+            for definition in meaning["definitions"]:
+                all_synonyms.extend(definition.get("synonyms", []))
+
+        # remove any duplicates
+        all_synonyms = list(set(all_synonyms))
+
+        if all_synonyms:
+            label_text = f"Synonyms for {word} are:\n* " + all_synonyms[0]
+            for synonym in all_synonyms[1:]:
+                label_text += "\n* " + synonym
+        else:
+            label_text = "No synonyms found."
+
+        label.config(text=label_text)
+    label.grid(row=2, column=0, padx=10, pady=5)
