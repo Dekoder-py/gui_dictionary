@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import ttk
 
-from utils.dictionary import get_antonyms, get_definition, get_synonyms
+from gui_dictionary.utils.dictionary import get_antonyms, get_definition, get_synonyms
 
 
 def main():
