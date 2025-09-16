@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import ttk
 
-from utils.dictionary import get_definition, get_synonyms
+from utils.dictionary import get_antonyms, get_definition, get_synonyms
 
 
 def temp_click():
@@ -13,9 +13,9 @@ root = tkinter.Tk()
 root.title("Dictionary")
 root.geometry("1080x720")
 
-definition = ttk.Label(root)
+definition = ttk.Label(root, wraplength=300, justify="left")
 
-synonyms = ttk.Label(root)
+thesaurus = ttk.Label(root)
 
 word = tkinter.Variable()
 
@@ -28,8 +28,13 @@ define_button = ttk.Button(
 define_button.grid(row=0, column=1, padx=5, pady=5)
 
 synonym_button = ttk.Button(
-    root, text="Get Synonyms!", command=lambda: get_synonyms(synonyms, word.get())
+    root, text="Get Synonyms!", command=lambda: get_synonyms(thesaurus, word.get())
 )
 synonym_button.grid(row=2, column=1, padx=5, pady=5)
+
+antonym_button = ttk.Button(
+    root, text="Get Antonyms!", command=lambda: get_antonyms(thesaurus, word.get())
+)
+antonym_button.grid(row=2, column=2, padx=5, pady=5)
 
 root.mainloop()

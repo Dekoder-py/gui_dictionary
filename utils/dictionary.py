@@ -51,3 +51,27 @@ def get_synonyms(label, word):
 
         label.config(text=label_text)
     label.grid(row=2, column=0, padx=10, pady=5)
+
+
+def get_antonyms(label, word):
+    request = make_request(label, word)
+    if request:
+        all_antonyms = []
+
+        for meaning in request["meanings"]:
+            all_antonyms.extend(meaning.get("antonyms", []))
+
+            for definition in meaning["definitions"]:
+                all_antonyms.extend(definition.get("antonyms", []))
+
+        # remove duplicates
+        all_antonyms = list(set(all_antonyms))
+
+        if all_antonyms:
+            label_text = f"Antonyms for {word} are:\n* " + all_antonyms[0]
+            for antonym in all_antonyms[1:]:
+                label_text += "\n* " + antonym
+        else:
+            label_text = "No antonyms found."
+        label.config(text=label_text)
+    label.grid(row=2, column=0, padx=10, pady=5)
